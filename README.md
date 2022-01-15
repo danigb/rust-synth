@@ -20,7 +20,11 @@
 
 - https://thewolfsound.com/sound-synthesis/wavetable-synth-in-rust/
 - https://www.earlevel.com/main/2012/05/25/a-wavetable-oscillator-the-code/
+
+Tables:
+
 - https://waveeditonline.com/
+- https://github.com/KristofferKarlAxelEkstrand/AKWF-FREE
 
 #### Sequencing
 
@@ -31,6 +35,12 @@
 - a minimal rewrite of sporth core: https://tig.krj.st/usporth/files.html
 - https://ccrma.stanford.edu/realsimple/
 - Audio GUI design: https://www.robotplanet.dk/audio/audio_gui_design/
+
+#### Repositories
+
+- https://github.com/graue/synth
+- https://github.com/olilarkin/awesome-musicdsp
+- https://github.com/BillyDM/Awesome-Audio-DSP
 
 ### Rust
 
