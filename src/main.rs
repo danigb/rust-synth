@@ -29,9 +29,9 @@ fn main() {
     buffer::write_buffer("osc.wav", SAMPLE_RATE, buffer);
 
     let mut env = env::Envelope::new(SAMPLE_RATE);
-    env.set_attack(0.01);
-    env.set_relese(0.2);
-    env.set_hold_in_seconds(0.5);
+    env.set_attack(0.1);
+    env.set_release(0.2);
+    env.set_hold_in_seconds(0.1);
 
     let mut buffer = buffer::create_buffer(SAMPLE_RATE, 2.0);
     buffer.push(env.tick(1.0));

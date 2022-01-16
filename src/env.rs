@@ -37,7 +37,7 @@ impl Envelope {
         self.atk_env = (-1.0 / (attack * self.sample_rate as f32)).exp()
     }
 
-    pub fn set_relese(&mut self, release: f32) {
+    pub fn set_release(&mut self, release: f32) {
         self.rel_env = (-1.0 / (release * self.sample_rate as f32)).exp()
     }
 
@@ -61,21 +61,25 @@ impl Envelope {
                 out = self.atk_env * self.prev + (1.0 - self.atk_env);
 
                 if (out - self.prev) <= EPSILON {
+                    println!("ATTACK TO HOLD: {:?}", out);
                     self.mode = Mode::HOLD;
                     self.timer = 0.0
                 }
             }
             Mode::HOLD => {
                 out = self.prev;
+                self.timer += self.timer_inc;
 
                 if self.timer >= 1.0 {
+                    println!("HOLD TO RELEASE: {:?}", out);
                     self.mode = Mode::RELEASE;
                 }
             }
             Mode::RELEASE => {
                 out = self.rel_env * self.prev;
 
-                if (out - self.prev) <= EPSILON {
+                if out <= EPSILON {
+                    println!("RELEASE TO NONE: {:?}", out);
                     self.mode = Mode::NONE;
                 }
             }
