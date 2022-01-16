@@ -2,6 +2,8 @@
 
 > Learn rust while building a basic audio synthesizer
 
+**Warning: work in progress. It will take time**
+
 Is a mix of several sources:
 
 - [Paul Batchelor's sndkit](https://github.com/PaulBatchelor/sndkit)
@@ -30,12 +32,12 @@ Thanks to all!
 - https://thewolfsound.com/sound-synthesis/wavetable-synth-in-rust/
 - https://www.earlevel.com/main/2012/05/25/a-wavetable-oscillator-the-code/
 
-Tables:
+Wavetable sets:
 
 - https://waveeditonline.com/
 - https://github.com/KristofferKarlAxelEkstrand/AKWF-FREE
 
-#### Sequencing
+#### Sequencing
 
 - https://pbat.ch/wiki/gest/
 
