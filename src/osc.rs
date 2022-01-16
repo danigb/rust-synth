@@ -1,5 +1,3 @@
-use crate::generator::Generator;
-
 pub struct WavetableOscillator {
     pub sample_rate: u32,
     pub phase: f32,
@@ -58,11 +56,5 @@ impl WavetableOscillator {
 
         return truncated_index_weight * self.wave_table[truncated_index]
             + next_index_weight * self.wave_table[next_index];
-    }
-}
-
-impl Generator for WavetableOscillator {
-    fn tick(&mut self) -> f32 {
-        return self.tick();
     }
 }

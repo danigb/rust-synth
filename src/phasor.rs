@@ -20,7 +20,7 @@ impl Phasor {
         self.freq = freq;
     }
 
-    pub fn sample(&mut self) -> f32 {
+    pub fn tick(&mut self) -> f32 {
         let output = self.phase;
         let increment = self.freq * self.inv_sample_rate;
         let mut phase = self.phase + increment;
