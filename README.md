@@ -1,17 +1,26 @@
-# Rust Basic Synth
+# Rust Synth
 
-> Learn rust while building a basic synth
+> Learn rust while building a basic audio synthesizer
+
+Is a mix of several sources:
+
+- [Paul Batchelor's sndkit](https://github.com/PaulBatchelor/sndkit)
+- [Daniel R. Mitchell's basic synth book](http://basicsynth.com/)
+- [Will Pirkle's synth book](https://www.willpirkle.com/synthlabdm/)
+- [Yü Fang's A modular approach to audio programming course](https://mu.krj.st/)
+
+Thanks to all!
 
 ## References
 
 ### Synth
 
-#### Books
+#### Books
 
 - http://basicsynth.com/
 - https://www.lulu.com/search/?keyword=synthesizers
 
-#### Tutorials
+#### Tutorials and courses
 
 - https://mu.krj.st/
 - https://www.david-gouveia.com/creating-a-basic-synth-in-xna-part-i
