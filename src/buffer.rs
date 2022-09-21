@@ -2,6 +2,8 @@ use rodio::buffer::SamplesBuffer;
 use rodio::{OutputStream, Sink};
 use std::path;
 
+use crate::signal::Signal;
+
 pub fn create_buffer(sample_rate: u32, duration_in_seconds: f32) -> Vec<f32> {
     let length = (sample_rate as f32 * duration_in_seconds) as usize;
     let buffer: Vec<f32> = Vec::with_capacity(length);
@@ -31,4 +33,17 @@ pub fn write_buffer<P: AsRef<path::Path>>(filename: P, sample_rate: u32, buffer:
         writer.write_sample(*value).unwrap();
     }
     writer.finalize().unwrap();
+}
+
+pub fn create_wav_file<S: Signal>(
+    filename: &str,
+    sample_rate: u32,
+    duration_in_seconds: f32,
+    mut source: S,
+) {
+    let mut buffer = create_buffer(sample_rate, duration_in_seconds);
+    for _ in 0..buffer.capacity() {
+        buffer.push(source.tick());
+    }
+    write_buffer(filename, sample_rate, buffer);
 }

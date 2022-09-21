@@ -7,39 +7,29 @@ mod wavetable;
 mod wavetable_oscillator;
 
 use amp::Amp;
+use buffer::create_wav_file;
+use envelope::Envelope;
 use phasor::Phasor;
-use signal::{Constant, Impulse, Signal};
+use signal::{Constant, Impulse, Scale, Signal};
 use wavetable_oscillator::WavetableOscillator;
 
 const SAMPLE_RATE: u32 = 44100;
 const WAVETABLE_SIZE: usize = 1024;
 
 fn main() {
-    let mut phasor = Phasor::new(SAMPLE_RATE, Constant::new(440.0));
-    let mut buffer = buffer::create_buffer(SAMPLE_RATE, 2.0);
-    for _ in 0..buffer.capacity() {
-        buffer.push(phasor.tick());
-    }
-    buffer::write_buffer("phasor.wav", SAMPLE_RATE, buffer);
+    let phasor = Phasor::new(SAMPLE_RATE, Constant::new(440.0));
+    create_wav_file("phasor.wav", SAMPLE_RATE, 2.0, phasor);
 
-    let sin_wt = wavetable::sin(WAVETABLE_SIZE);
-    let mut osc = WavetableOscillator::new(SAMPLE_RATE, sin_wt, Constant::new(440.0));
-    let mut buffer = buffer::create_buffer(SAMPLE_RATE, 2.0);
-    for _ in 0..buffer.capacity() {
-        buffer.push(osc.tick());
-    }
-    buffer::write_buffer("osc.wav", SAMPLE_RATE, buffer);
+    let sin_wavetable = wavetable::sin(WAVETABLE_SIZE);
+    let filter_freq = Scale::linear(
+        200.0,
+        800.0,
+        Envelope::new(SAMPLE_RATE, 0.3, 0.2, 0.0, Impulse::new()),
+    );
+    let osc = WavetableOscillator::new(SAMPLE_RATE, sin_wavetable, filter_freq);
+    let amp_env = Envelope::new(SAMPLE_RATE, 0.1, 0.2, 0.1, Impulse::new());
+    let amp = Amp::new(osc, amp_env);
 
-    let mut amp_env = envelope::Envelope::new(SAMPLE_RATE, Impulse::new());
-    amp_env.set_attack(0.1);
-    amp_env.set_release(0.2);
-    amp_env.set_hold_in_seconds(0.1);
-
-    let mut amp = Amp::new(osc, amp_env);
-
-    let mut buffer = buffer::create_buffer(SAMPLE_RATE, 2.0);
-    for _ in 0..buffer.capacity() {
-        buffer.push(amp.tick())
-    }
-    buffer::write_buffer("result.wav", SAMPLE_RATE, buffer);
+    let output = amp;
+    create_wav_file("result.wav", SAMPLE_RATE, 2.0, output);
 }
