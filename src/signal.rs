@@ -38,3 +38,25 @@ impl Signal for Constant {
         self.value
     }
 }
+
+pub struct Scale<S: Signal> {
+    source: S,
+
+    // internal state
+    min: f32,
+    mul: f32,
+}
+
+impl<S: Signal> Scale<S> {
+    pub fn linear(min: f32, max: f32, source: S) -> Self {
+        let mul = max - min;
+        Scale { source, min, mul }
+    }
+}
+
+impl<S: Signal> Signal for Scale<S> {
+    fn tick(&mut self) -> f32 {
+        let source = self.source.tick();
+        source * self.mul + self.min
+    }
+}
