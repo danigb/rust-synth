@@ -1,9 +1,11 @@
-pub struct WavetableOscillator {
-    pub sample_rate: u32,
+use crate::signal::Signal;
+
+pub struct WavetableOscillator<F: Signal> {
+    frequency: F,
+    inv_sample_rate: f32,
     pub phase: f32,
-    phase_increment: f32,
-    wave_table: Vec<f32>,
     table_size: usize,
+    wave_table: Vec<f32>,
 }
 
 fn clamp_phase(phase: f32) -> f32 {
@@ -17,34 +19,18 @@ fn clamp_phase(phase: f32) -> f32 {
     return clamped;
 }
 
-impl WavetableOscillator {
-    pub fn new(sample_rate: u32, wave_table: Vec<f32>) -> WavetableOscillator {
+impl<F: Signal> WavetableOscillator<F> {
+    pub fn new(sample_rate: u32, wave_table: Vec<f32>, frequency: F) -> Self {
         let table_size = wave_table.len();
+        let inv_sample_rate = 1.0 / (sample_rate as f32);
 
         return WavetableOscillator {
-            sample_rate,
+            frequency,
+            inv_sample_rate,
             wave_table,
             phase: 0.0,
-            phase_increment: 0.0,
             table_size,
         };
-    }
-
-    pub fn set_frequency(&mut self, frequency: f32) {
-        self.phase_increment = frequency / self.sample_rate as f32;
-    }
-
-    pub fn tick(&mut self) -> f32 {
-        let sample = self.get_interpolated_value(self.phase);
-        self.phase = clamp_phase(self.phase + self.phase_increment);
-        return sample;
-    }
-
-    pub fn tick_with_external_phase(&self, phase: f32) -> f32 {
-        let clamped_phase = clamp_phase(phase);
-
-        let sample = self.get_interpolated_value(clamped_phase);
-        return sample;
     }
 
     fn get_interpolated_value(&self, phase: f32) -> f32 {
@@ -56,5 +42,15 @@ impl WavetableOscillator {
 
         return truncated_index_weight * self.wave_table[truncated_index]
             + next_index_weight * self.wave_table[next_index];
+    }
+}
+
+impl<F: Signal> Signal for WavetableOscillator<F> {
+    fn tick(&mut self) -> f32 {
+        let freq = self.frequency.tick();
+        let phase_increment = freq * self.inv_sample_rate;
+        let sample = self.get_interpolated_value(self.phase);
+        self.phase = clamp_phase(self.phase + phase_increment);
+        sample
     }
 }
