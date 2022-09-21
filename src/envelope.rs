@@ -1,3 +1,5 @@
+use crate::signal::Signal;
+
 const EPSILON: f32 = 5e-8;
 
 enum Mode {
@@ -7,7 +9,11 @@ enum Mode {
     RELEASE,
 }
 
-pub struct Envelope {
+pub struct Envelope<T: Signal> {
+    // Params
+    trigger: T,
+
+    // Internal state
     pub sample_rate: u32,
     // The timer is stored in a normalized range [0,1],
     // which allows the hold time to be adjustable while it is in hold mode.
@@ -20,9 +26,11 @@ pub struct Envelope {
     prev: f32,
 }
 
-impl Envelope {
-    pub fn new(sample_rate: u32) -> Envelope {
-        return Envelope {
+impl<T: Signal> Envelope<T> {
+    pub fn new(sample_rate: u32, trigger: T) -> Self {
+        Envelope {
+            trigger,
+
             sample_rate,
             timer: 0.0,
             timer_inc: 0.0,
@@ -30,7 +38,7 @@ impl Envelope {
             rel_env: 0.0,
             mode: Mode::NONE,
             prev: 0.0,
-        };
+        }
     }
 
     pub fn set_attack(&mut self, attack: f32) {
@@ -48,10 +56,13 @@ impl Envelope {
             self.timer_inc = 1.0
         }
     }
+}
 
-    pub fn tick(&mut self, trigger: f32) -> f32 {
+impl<T: Signal> Signal for Envelope<T> {
+    fn tick(&mut self) -> f32 {
         let mut out = 0.0;
 
+        let trigger = self.trigger.tick();
         if trigger != 0.0 {
             self.mode = Mode::ATTACK;
         }
