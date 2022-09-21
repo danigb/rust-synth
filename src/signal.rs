@@ -22,3 +22,19 @@ impl Signal for Impulse {
         }
     }
 }
+
+pub struct Constant {
+    value: f32,
+}
+
+impl Constant {
+    pub fn new(value: f32) -> Self {
+        Constant { value }
+    }
+}
+
+impl Signal for Constant {
+    fn tick(&mut self) -> f32 {
+        self.value
+    }
+}
