@@ -27,6 +27,10 @@ Thanks to all!
 - https://mu.krj.st/
 - https://www.david-gouveia.com/creating-a-basic-synth-in-xna-part-i
 
+#### Oscillators
+
+- PolyBLEP http://www.martin-finke.de/blog/articles/audio-plugins-018-polyblep-oscillator/
+
 ##### Wavetable oscillator
 
 - https://thewolfsound.com/sound-synthesis/wavetable-synth-in-rust/

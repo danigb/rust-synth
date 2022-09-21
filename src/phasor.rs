@@ -1,28 +1,40 @@
+use crate::signal::Signal;
+
 /**
  * @see https://pbat.ch/sndkit/phasor/
  */
-pub struct Phasor {
-    pub freq: f32,
-    pub phase: f32,
+pub struct Phasor<F: Signal> {
+    frequency: F,
+    phase: f32,
     inv_sample_rate: f32,
 }
 
-impl Phasor {
-    pub fn new(sample_rate: u32) -> Phasor {
-        return Phasor {
-            freq: 440.0,
-            phase: 0.0,
-            inv_sample_rate: 1.0 / sample_rate as f32,
-        };
+impl<F: Signal> Phasor<F> {
+    pub fn new(sample_rate: u32, frequency: F) -> Self {
+        let inv_sample_rate = 1.0 / (sample_rate as f32);
+        let phase = 0.0;
+
+        Phasor {
+            frequency,
+            phase,
+            inv_sample_rate,
+        }
     }
 
-    pub fn set_frequency(&mut self, freq: f32) {
-        self.freq = freq;
+    pub fn reset(&mut self, phase: f32) {
+        if phase >= 0.0 {
+            self.phase = phase;
+        } else {
+            self.phase = 0.0;
+        }
     }
+}
 
-    pub fn sample(&mut self) -> f32 {
+impl<F: Signal> Signal for Phasor<F> {
+    fn tick(&mut self) -> f32 {
+        let freq = self.frequency.tick();
         let output = self.phase;
-        let increment = self.freq * self.inv_sample_rate;
+        let increment = freq * self.inv_sample_rate;
         let mut phase = self.phase + increment;
         if phase >= 1.0 {
             phase -= 1.0;
@@ -32,13 +44,5 @@ impl Phasor {
         self.phase = phase;
 
         return output;
-    }
-
-    pub fn reset(&mut self, phase: f32) {
-        if phase >= 0.0 {
-            self.phase = phase;
-        } else {
-            self.phase = 0.0;
-        }
     }
 }
