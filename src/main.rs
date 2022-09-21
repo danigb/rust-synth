@@ -30,12 +30,12 @@ fn main() {
     }
     buffer::write_buffer("osc.wav", SAMPLE_RATE, buffer);
 
-    let mut env = envelope::Envelope::new(SAMPLE_RATE, Impulse::new());
-    env.set_attack(0.1);
-    env.set_release(0.2);
-    env.set_hold_in_seconds(0.1);
+    let mut amp_env = envelope::Envelope::new(SAMPLE_RATE, Impulse::new());
+    amp_env.set_attack(0.1);
+    amp_env.set_release(0.2);
+    amp_env.set_hold_in_seconds(0.1);
 
-    let mut amp = Amp::new(osc, env);
+    let mut amp = Amp::new(osc, amp_env);
 
     let mut buffer = buffer::create_buffer(SAMPLE_RATE, 2.0);
     for _ in 0..buffer.capacity() {

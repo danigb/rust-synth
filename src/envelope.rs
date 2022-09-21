@@ -27,8 +27,8 @@ pub struct Envelope<T: Signal> {
 }
 
 impl<T: Signal> Envelope<T> {
-    pub fn new(sample_rate: u32, trigger: T) -> Self {
-        Envelope {
+    pub fn new(sample_rate: u32, attack: f32, release: f32, hold: f32, trigger: T) -> Self {
+        let mut env = Envelope {
             trigger,
 
             sample_rate,
@@ -38,18 +38,22 @@ impl<T: Signal> Envelope<T> {
             rel_env: 0.0,
             mode: Mode::NONE,
             prev: 0.0,
-        }
+        };
+        env.set_attack(attack);
+        env.set_release(release);
+        env.set_hold_in_seconds(hold);
+        env
     }
 
-    pub fn set_attack(&mut self, attack: f32) {
+    fn set_attack(&mut self, attack: f32) {
         self.atk_env = (-1.0 / (attack * self.sample_rate as f32)).exp()
     }
 
-    pub fn set_release(&mut self, release: f32) {
+    fn set_release(&mut self, release: f32) {
         self.rel_env = (-1.0 / (release * self.sample_rate as f32)).exp()
     }
 
-    pub fn set_hold_in_seconds(&mut self, hold: f32) {
+    fn set_hold_in_seconds(&mut self, hold: f32) {
         if hold > 0.0 {
             self.timer_inc = 1.0 / (hold * self.sample_rate as f32)
         } else {
