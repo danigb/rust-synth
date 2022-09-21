@@ -2,6 +2,7 @@ mod amp;
 mod buffer;
 mod envelope;
 mod phasor;
+mod rc_filter;
 mod signal;
 mod wavetable;
 mod wavetable_oscillator;
