@@ -1,5 +1,5 @@
 {
-  "cSpell.words": ["consts", "Phasor", "rodio", "wavetable"],
+  "cSpell.words": ["Adsr", "consts", "Phasor", "rodio", "wavetable"],
   "workbench.colorCustomizations": {
     "activityBar.activeBackground": "#bfc647",
     "activityBar.background": "#bfc647",

@@ -1,9 +1,11 @@
+mod adsr;
 mod amp;
 mod buffer;
 mod envelope;
 mod phasor;
 mod rc_filter;
 mod signal;
+mod triggers;
 mod wavetable;
 mod wavetable_oscillator;
 
@@ -11,7 +13,7 @@ use amp::Amp;
 use buffer::create_wav_file;
 use envelope::Envelope;
 use phasor::Phasor;
-use signal::{Constant, Impulse, Scale, Signal};
+use signal::{Constant, Impulse, Scale};
 use wavetable_oscillator::WavetableOscillator;
 
 const SAMPLE_RATE: u32 = 44100;
