@@ -2,6 +2,7 @@ mod adsr;
 mod amp;
 mod buffer;
 mod envelope;
+mod gate;
 mod phasor;
 mod rc_filter;
 mod signal;
@@ -9,9 +10,11 @@ mod triggers;
 mod wavetable;
 mod wavetable_oscillator;
 
+use adsr::adsr;
 use amp::Amp;
 use buffer::create_wav_file;
 use envelope::Envelope;
+use gate::Gate;
 use phasor::Phasor;
 use signal::{Constant, Impulse, Scale};
 use wavetable_oscillator::WavetableOscillator;
@@ -30,7 +33,7 @@ fn main() {
         Envelope::new(SAMPLE_RATE, 0.3, 0.2, 0.0, Impulse::new()),
     );
     let osc = WavetableOscillator::new(SAMPLE_RATE, sin_wavetable, filter_freq);
-    let amp_env = Envelope::new(SAMPLE_RATE, 0.1, 0.2, 0.1, Impulse::new());
+    let amp_env = adsr(SAMPLE_RATE, Gate::new(SAMPLE_RATE, 0.0, 1.0));
     let amp = Amp::new(osc, amp_env);
 
     let output = amp;

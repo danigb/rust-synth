@@ -1,4 +1,8 @@
-use crate::{rc_filter::RcFilter, signal::Signal, triggers::BoolTrigger};
+use crate::{
+    rc_filter::RcFilter,
+    signal::{Param, Signal},
+    triggers::BoolTrigger,
+};
 
 const EPSILON: f32 = 1e-9;
 
@@ -39,6 +43,14 @@ impl<A: Signal, D: Signal, S: Signal, R: Signal, G: Signal> Adsr<A, D, S, R, G> 
             rc_filter: RcFilter::new(sample_rate, 0.999),
         }
     }
+}
+
+pub fn adsr<G: Signal>(sample_rate: u32, gate: G) -> Adsr<Param, Param, Param, Param, G> {
+    let attack = Param::new(0.1);
+    let decay = Param::new(0.1);
+    let sustain = Param::new(0.5);
+    let release = Param::new(0.1);
+    Adsr::new(sample_rate, attack, decay, sustain, release, gate)
 }
 
 impl<A: Signal, D: Signal, S: Signal, R: Signal, G: Signal> Signal for Adsr<A, D, S, R, G> {
