@@ -2,6 +2,25 @@ pub trait Signal {
     fn tick(&mut self) -> f32;
 }
 
+pub struct Param {
+    value: f32,
+}
+impl Param {
+    pub fn new(value: f32) -> Self {
+        Param { value }
+    }
+
+    pub fn set(&mut self, value: f32) {
+        self.value = value;
+    }
+}
+
+impl Signal for Param {
+    fn tick(&mut self) -> f32 {
+        self.value
+    }
+}
+
 pub struct Impulse {
     first: bool,
 }
